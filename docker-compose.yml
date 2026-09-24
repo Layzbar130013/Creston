@@ -1,0 +1,29 @@
+services:
+  creston-web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: creston_store
+    restart: unless-stopped
+    ports:
+      - "${PORT:-8000}:8000"
+    environment:
+      - PORT=8000
+      - HOST=0.0.0.0
+      - CRESTON_DB_PATH=/app/data/creston.db
+      - CRESTON_UPLOAD_DIR=/app/public/uploads
+    volumes:
+      - creston_data:/app/data
+      - creston_uploads:/app/public/uploads
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:8000/api/store/settings"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+
+volumes:
+  creston_data:
+    name: creston_db_data
+  creston_uploads:
+    name: creston_uploads

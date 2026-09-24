@@ -1,0 +1,26 @@
+[Unit]
+Description=CRESTON PREMIUM COLLECTIONS Store Engine
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/creston
+EnvironmentFile=-/var/www/creston/.env
+Environment=PORT=8000
+Environment=HOST=127.0.0.1
+Environment=CRESTON_DB_PATH=/var/www/creston/creston.db
+Environment=CRESTON_UPLOAD_DIR=/var/www/creston/public/uploads
+ExecStart=/usr/bin/python3 /var/www/creston/server/app.py
+Restart=always
+RestartSec=5s
+
+# Security sandboxing
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ReadWritePaths=/var/www/creston/creston.db /var/www/creston/public/uploads
+
+[Install]
+WantedBy=multi-user.target

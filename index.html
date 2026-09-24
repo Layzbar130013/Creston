@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRESTON PREMIUM COLLECTIONS | Quality, Style, Trust</title>
+  <meta name="description" content="Kenya's premier clothing boutique. Handcrafted suits, evening gowns, executive office wear, and bespoke apparel with Lipa na M-Pesa and countrywide delivery.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+
+  <!-- Top Announcement Bar -->
+  <aside class="announcement-bar" aria-label="Store Announcement">
+    <div class="announcement-left">
+      <span class="announcement-badge">Lipa na M-Pesa</span>
+      <span id="announcement-banner-text">🇰🇪 Free Nairobi Express Delivery on orders above KSh 5,000 | Countrywide Delivery across all 47 Counties</span>
+    </div>
+    <div class="announcement-right">
+      <a href="/admin.html">🔐 Admin Portal</a>
+    </div>
+  </aside>
+
+  <!-- Main Navigation Header -->
+  <header class="site-header">
+    <div class="header-inner">
+      <!-- Brand Logo & Motto -->
+      <a href="/" class="brand-wrapper">
+        <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=120&q=80" alt="Creston Logo" class="brand-logo-img store-logo-img">
+        <div class="brand-titles">
+          <span class="brand-name store-name-text">CRESTON</span>
+          <span class="brand-motto store-motto-text">Quality, Style, Trust</span>
+        </div>
+      </a>
+
+      <!-- Search Input -->
+      <div class="header-search">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="search-products-input" class="search-input" placeholder="Search suits, dresses, blazers, shoes...">
+      </div>
+
+      <!-- Header Actions -->
+      <div class="header-actions">
+        <button class="nav-link-btn" onclick="document.getElementById('about-modal').classList.add('active')">
+          <span>🏛️</span> About Us
+        </button>
+        <button class="nav-link-btn" onclick="document.getElementById('track-order-modal').classList.add('active')">
+          <span>📦</span> Track Order
+        </button>
+        <button class="nav-link-btn gold-accent" id="btn-account-toggle" onclick="openAuthModal('signin')">
+          <span>👤</span> Sign In
+        </button>
+        <button class="cart-btn" onclick="toggleCartDrawer(true)" aria-label="View shopping bag">
+          <span>🛍️ Bag</span>
+          <span class="cart-badge" id="header-cart-badge">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-inner">
+      <div class="hero-content">
+        <h1>Redefining East African <span>Elegance & Style</span></h1>
+        <p class="hero-subtitle">
+          Bespoke executive tailoring, breathtaking evening gowns, and contemporary apparel curated for discerning gentlemen and ladies.
+        </p>
+        <div class="hero-features">
+          <div class="hero-feature-item"><span class="icon">✨</span> 100% Authentic Fabrics</div>
+          <div class="hero-feature-item"><span class="icon">🇰🇪</span> Nairobi CBD & Countrywide Delivery</div>
+          <div class="hero-feature-item"><span class="icon">💚</span> Instant Lipa na M-Pesa STK</div>
+        </div>
+        <a href="#collections-anchor" class="hero-cta">
+          Explore Collections <span>↓</span>
+        </a>
+      </div>
+      <div class="hero-cards-preview">
+        <div class="hero-img-box">
+          <img src="https://images.unsplash.com/photo-1594938298603-c8148c4dae35?auto=format&fit=crop&w=600&q=80" alt="Executive Suits">
+          <span class="hero-img-tag">Men's Executive Suits</span>
+        </div>
+        <div class="hero-img-box">
+          <img src="https://images.unsplash.com/photo-1566174053879-31528523f8ae?auto=format&fit=crop&w=600&q=80" alt="Evening Gowns">
+          <span class="hero-img-tag">Luxury Evening Wear</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Container / Collections -->
+  <main class="main-container" id="collections-anchor">
+    
+    <!-- Controls Bar -->
+    <div class="catalog-controls">
+      <!-- Category Filter Pills -->
+      <div class="category-nav" id="category-pills-container">
+        <!-- Dynamically rendered -->
+      </div>
+
+      <!-- Sorting Select -->
+      <div>
+        <select id="sort-products-select" class="sort-select" aria-label="Sort products">
+          <option value="newest">Featured & Newest</option>
+          <option value="price_asc">Price: Low to High</option>
+          <option value="price_desc">Price: High to Low</option>
+          <option value="name">Alphabetical: A - Z</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Products Grid -->
+    <div class="product-grid" id="product-grid">
+      <!-- Dynamically rendered -->
+    </div>
+  </main>
+
+  <!-- Slide-out Cart Drawer -->
+  <div class="drawer-backdrop" id="drawer-backdrop" onclick="toggleCartDrawer(false)"></div>
+  <aside class="cart-drawer" id="cart-drawer" aria-label="Shopping Bag">
+    <div class="drawer-header">
+      <h3 class="drawer-title">Shopping Bag</h3>
+      <button class="btn-close-drawer" onclick="toggleCartDrawer(false)">&times;</button>
+    </div>
+    <div class="drawer-body" id="cart-items-list">
+      <!-- Rendered by JS -->
+    </div>
+    <div class="drawer-footer">
+      <div class="summary-row">
+        <span>Delivery:</span>
+        <span style="color: var(--mpesa); font-weight: 600;">Calculated at Checkout</span>
+      </div>
+      <div class="summary-row total">
+        <span>Subtotal:</span>
+        <span id="cart-subtotal-display">KSh 0</span>
+      </div>
+      <button class="btn-checkout" id="btn-open-checkout" onclick="openCheckoutModal()">
+        Proceed to Checkout <span>→</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Multi-Step Checkout Modal -->
+  <div class="modal-backdrop" id="checkout-modal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 class="modal-title">Complete Your Order</h3>
+        <button class="modal-close" onclick="closeModals()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="checkout-form" onsubmit="handleCheckoutSubmit(event)">
+          <!-- Customer & Delivery Information -->
+          <h4 style="font-size: 0.95rem; font-weight: 700; margin-bottom: 12px; color: var(--gold); text-transform: uppercase;">
+            📍 1. Delivery Location & Contacts
+          </h4>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="checkout-name">Recipient Full Name *</label>
+              <input type="text" id="checkout-name" class="form-input" placeholder="e.g. Wambui Kamau" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="checkout-phone">Kenyan Phone Number *</label>
+              <input type="tel" id="checkout-phone" class="form-input" placeholder="e.g. 0712345678" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="checkout-email">Email Address (for receipt)</label>
+              <input type="email" id="checkout-email" class="form-input" placeholder="e.g. wambui@gmail.com">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="checkout-county">Delivery County *</label>
+              <select id="checkout-county" class="form-select" required>
+                <!-- Populated with Kenyan counties -->
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="checkout-town">Town / Area / Neighborhood</label>
+              <input type="text" id="checkout-town" class="form-input" placeholder="e.g. Westlands / Kilimani / Nyali">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="checkout-address">Building / Street / House No. *</label>
+              <input type="text" id="checkout-address" class="form-input" placeholder="e.g. Rhapta Rd, Court 12, Apt 4B" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="checkout-notes">Special Delivery Directions / Notes</label>
+            <input type="text" id="checkout-notes" class="form-input" placeholder="e.g. Leave with security or call on arrival">
+          </div>
+
+          <!-- Payment Options -->
+          <h4 style="font-size: 0.95rem; font-weight: 700; margin: 18px 0 12px 0; color: var(--gold); text-transform: uppercase;">
+            💳 2. Payment Method
+          </h4>
+
+          <div class="payment-methods-grid">
+            <div class="payment-method-card selected" data-method="mpesa_stk" onclick="selectPaymentMethod('mpesa_stk')">
+              <div class="pm-title"><span style="color: var(--mpesa);">📱</span> Lipa na M-Pesa Online</div>
+              <div class="pm-desc">Instant STK PIN prompt sent to your phone</div>
+            </div>
+            <div class="payment-method-card" data-method="mpesa_till" onclick="selectPaymentMethod('mpesa_till')">
+              <div class="pm-title"><span style="color: var(--mpesa);">🏪</span> Buy Goods Till</div>
+              <div class="pm-desc">Pay directly to our M-Pesa Merchant Till</div>
+            </div>
+            <div class="payment-method-card" data-method="mpesa_paybill" onclick="selectPaymentMethod('mpesa_paybill')">
+              <div class="pm-title"><span style="color: var(--mpesa);">🏦</span> M-Pesa Paybill</div>
+              <div class="pm-desc">Pay via Paybill & Account Reference</div>
+            </div>
+            <div class="payment-method-card" data-method="cod" onclick="selectPaymentMethod('cod')">
+              <div class="pm-title">💵 Cash on Delivery</div>
+              <div class="pm-desc">Pay cash or M-Pesa upon receipt</div>
+            </div>
+          </div>
+
+          <!-- Till & Instructions Box (Conditional) -->
+          <div id="mpesa-till-box" style="display: none; background: #F0FDF4; border: 1px solid #BBF7D0; border-radius: var(--radius-sm); padding: 14px; margin-bottom: 14px;">
+            <div style="font-weight: 700; font-size: 0.9rem; color: var(--mpesa-dark); margin-bottom: 6px;">
+              Lipa na M-Pesa Details:
+            </div>
+            <div style="font-size: 0.85rem; line-height: 1.6; color: #166534;">
+              • <strong>Till Number:</strong> <span id="checkout-till-display" style="font-size: 1.1rem; font-weight: 800; color: #064E3B;">5842910</span> (<span id="checkout-till-name">CRESTON</span>)<br>
+              • <strong>Paybill:</strong> <span id="checkout-paybill-display">400200</span> | <strong>Acc:</strong> <span id="checkout-paybill-acc">CRESTON</span>
+            </div>
+            <div id="checkout-instructions-display" style="font-size: 0.8rem; color: #374151; margin-top: 8px; white-space: pre-line; border-top: 1px dashed #86EFAC; padding-top: 6px;"></div>
+          </div>
+
+          <!-- STK Prompt Info Box -->
+          <div id="mpesa-stk-info-box" style="background: var(--mpesa-subtle); border: 1px solid #A7F3D0; border-radius: var(--radius-sm); padding: 12px; margin-bottom: 14px;">
+            <p style="font-size: 0.85rem; color: #065F46;">
+              🟢 <strong>Instant Checkout:</strong> Upon clicking place order, an M-Pesa notification will appear on your phone asking you to enter your M-Pesa PIN.
+            </p>
+          </div>
+
+          <!-- Manual M-Pesa Code Input -->
+          <div id="manual-mpesa-code-box" class="form-group" style="display: none;">
+            <label class="form-label" for="checkout-mpesa-code">M-Pesa Confirmation Code (e.g. SJD92KL890)</label>
+            <input type="text" id="checkout-mpesa-code" class="form-input" placeholder="Paste confirmation code from SMS">
+          </div>
+
+          <!-- Order Cost Summary -->
+          <div style="background: #F9FAFB; padding: 14px; border-radius: var(--radius-sm); border: 1px solid var(--border); margin: 16px 0;">
+            <div class="summary-row"><span>Garments Subtotal:</span><strong id="checkout-subtotal">KSh 0</strong></div>
+            <div class="summary-row"><span>County Delivery Fee:</span><strong id="checkout-shipping">KSh 0</strong></div>
+            <div class="summary-row total"><span>Total Payable:</span><strong id="checkout-total" style="color: var(--mpesa);">KSh 0</strong></div>
+          </div>
+
+          <button type="submit" class="btn-checkout" id="btn-submit-order">
+            Confirm & Place Order
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Product Quick-View Modal -->
+  <div class="modal-backdrop" id="product-detail-modal">
+    <div class="modal-box" style="max-width: 780px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Garment Details</h3>
+        <button class="modal-close" onclick="closeModals()">&times;</button>
+      </div>
+      <div class="modal-body" id="product-detail-modal-body">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- M-Pesa STK Push Simulation Popup -->
+  <div class="modal-backdrop" id="stk-simulation-modal">
+    <div class="modal-box" style="max-width: 380px; background: transparent; box-shadow: none; border: none;">
+      <div class="ussd-phone-mockup">
+        <div class="ussd-screen">
+          <div class="ussd-header">LIPA NA M-PESA</div>
+          <div class="ussd-prompt">
+            Do you want to pay <span id="stk-amount-display" style="font-weight: 800; color: #FDE047;">KSh 0</span> to 
+            <strong style="color: #6EE7B7;">CRESTON PREMIUM COLLECTIONS</strong> Till <span id="stk-till-display">5842910</span>?
+            <br><br>
+            Enter M-Pesa PIN:
+          </div>
+          <input type="password" id="stk-pin-input" class="ussd-input" maxlength="4" placeholder="••••" autofocus>
+          <div class="ussd-actions">
+            <button type="button" class="btn-ussd btn-ussd-cancel" onclick="closeModals()">Cancel</button>
+            <button type="button" class="btn-ussd btn-ussd-send" onclick="confirmSTKPayment()">Send PIN</button>
+          </div>
+        </div>
+        <p style="font-size: 0.72rem; color: #9CA3AF; text-align: center; margin-top: 10px;">
+          Simulated Kenyan M-Pesa USSD Prompt for <span id="stk-phone-display"></span>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Order Receipt & Success Modal -->
+  <div class="modal-backdrop" id="receipt-modal">
+    <div class="modal-box" style="max-width: 480px;">
+      <div class="modal-body" id="receipt-modal-body">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Track Order Modal -->
+  <div class="modal-backdrop" id="track-order-modal">
+    <div class="modal-box" style="max-width: 480px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Track Your Order</h3>
+        <button class="modal-close" onclick="closeModals()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form onsubmit="handleTrackOrder(event)">
+          <div class="form-group">
+            <label class="form-label" for="track-order-input">Enter Order Number</label>
+            <input type="text" id="track-order-input" class="form-input" placeholder="e.g. CP-2026-8801" required>
+          </div>
+          <button type="submit" class="btn-checkout" style="margin-top: 8px;">Check Order Status</button>
+        </form>
+        <div id="track-order-result"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- About Us Modal (Dynamic from Store Settings) -->
+  <div class="modal-backdrop" id="about-modal">
+    <div class="modal-box" style="max-width: 620px;">
+      <div class="modal-header">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <img src="" alt="Creston Logo" class="brand-logo-img store-logo-img" style="width: 40px; height: 40px;">
+          <div>
+            <h3 class="modal-title store-name-text">CRESTON PREMIUM COLLECTIONS</h3>
+            <span class="brand-motto store-motto-text">Quality, Style, Trust</span>
+          </div>
+        </div>
+        <button class="modal-close" onclick="closeModals()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <h4 id="about-modal-title" style="font-family: var(--font-serif); font-size: 1.25rem; margin-bottom: 10px; color: var(--gold);"></h4>
+        <p id="about-modal-text" style="font-size: 0.92rem; line-height: 1.6; color: #374151; margin-bottom: 20px;"></p>
+        
+        <div style="background: #F9FAFB; border: 1px solid var(--border); border-radius: var(--radius-md); padding: 16px;">
+          <div class="summary-row">
+            <span>📍 Physical Boutique:</span>
+            <strong id="about-modal-address" style="text-align: right; max-width: 60%;"></strong>
+          </div>
+          <div class="summary-row">
+            <span>📞 Customer Concierge:</span>
+            <span id="about-modal-phone"></span>
+          </div>
+          <div class="summary-row">
+            <span>✉️ Official Email:</span>
+            <span id="about-modal-email"></span>
+          </div>
+          <div class="summary-row">
+            <span>⏰ Operating Hours:</span>
+            <span id="about-modal-hours"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Customer Auth Modal (Sign In / Register / Profile) -->
+  <div class="modal-backdrop" id="auth-modal">
+    <div class="modal-box" style="max-width: 460px;">
+      <div class="modal-header">
+        <div style="display: flex; gap: 12px;">
+          <button type="button" class="auth-tab-btn active" data-tab="signin" onclick="switchAuthTab('signin')">Sign In</button>
+          <button type="button" class="auth-tab-btn" data-tab="register" onclick="switchAuthTab('register')">Register</button>
+          <button type="button" class="auth-tab-btn" data-tab="profile" id="tab-profile-btn" style="display: none;" onclick="switchAuthTab('profile')">My Profile</button>
+        </div>
+        <button class="modal-close" onclick="closeModals()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <!-- Sign In Form -->
+        <form id="signin-form" onsubmit="handleSignIn(event)">
+          <div class="form-group">
+            <label class="form-label">Email or Kenyan Phone</label>
+            <input type="text" id="signin-identifier" class="form-input" placeholder="e.g. wambui@gmail.com or 0712345678" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <input type="password" id="signin-password" class="form-input" placeholder="••••••••" required>
+          </div>
+          <button type="submit" class="btn-checkout" style="margin-top: 12px;">Sign In to Account</button>
+          <p style="text-align: center; margin-top: 14px; font-size: 0.85rem;">
+            Don't have an account? <a href="javascript:void(0)" onclick="switchAuthTab('register')" style="color: var(--gold); font-weight: 600;">Register here</a>
+          </p>
+        </form>
+
+        <!-- Register Form -->
+        <form id="register-form" style="display: none;" onsubmit="handleRegister(event)">
+          <div class="form-group">
+            <label class="form-label">Full Name *</label>
+            <input type="text" id="reg-name" class="form-input" placeholder="e.g. Wambui Kamau" required>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Email Address *</label>
+              <input type="email" id="reg-email" class="form-input" placeholder="name@email.com" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Kenyan Phone *</label>
+              <input type="tel" id="reg-phone" class="form-input" placeholder="07XXXXXXXX" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Password *</label>
+            <input type="password" id="reg-password" class="form-input" placeholder="Minimum 6 characters" required>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Default Delivery County</label>
+              <select id="reg-county" class="form-select">
+                <option value="Nairobi">Nairobi</option>
+                <option value="Kiambu">Kiambu</option>
+                <option value="Mombasa">Mombasa</option>
+                <option value="Nakuru">Nakuru</option>
+                <option value="Kisumu">Kisumu</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Delivery Address</label>
+              <input type="text" id="reg-address" class="form-input" placeholder="e.g. Rhapta Rd, Court 12">
+            </div>
+          </div>
+          <button type="submit" class="btn-checkout" style="margin-top: 12px;">Create Account</button>
+        </form>
+
+        <!-- Customer Profile & Order History View -->
+        <div id="user-profile-view" style="display: none;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <h4 style="font-size: 1.1rem; font-weight: 700;">My Order History</h4>
+            <button class="nav-link-btn" onclick="handleSignOut()" style="color: var(--danger);">Sign Out</button>
+          </div>
+          <div id="customer-orders-list"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-col">
+        <div class="brand-wrapper" style="margin-bottom: 12px;">
+          <img src="" alt="Creston Logo" class="brand-logo-img store-logo-img" style="width: 40px; height: 40px;">
+          <div class="brand-titles">
+            <span class="brand-name store-name-text" style="color: white; font-size: 1.1rem;">CRESTON</span>
+            <span class="brand-motto store-motto-text">Quality, Style, Trust</span>
+          </div>
+        </div>
+        <p style="font-size: 0.85rem; line-height: 1.6; color: #9CA3AF;">
+          Kenya's bespoke clothing destination. Celebrating refined sartorial artistry, premium textiles, and unmatched elegance.
+        </p>
+      </div>
+      <div class="footer-col">
+        <h4>Collections</h4>
+        <ul>
+          <li><a href="javascript:void(0)" onclick="selectCategory('mens-suits')">Men's Suits & Blazers</a></li>
+          <li><a href="javascript:void(0)" onclick="selectCategory('womens-dresses')">Women's Gowns & Dresses</a></li>
+          <li><a href="javascript:void(0)" onclick="selectCategory('office-wear')">Executive Office Wear</a></li>
+          <li><a href="javascript:void(0)" onclick="selectCategory('footwear')">Handcrafted Footwear</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Customer Care</h4>
+        <ul>
+          <li><a href="javascript:void(0)" onclick="document.getElementById('track-order-modal').classList.add('active')">Track Your Order</a></li>
+          <li><a href="javascript:void(0)" onclick="document.getElementById('about-modal').classList.add('active')">About Creston Boutique</a></li>
+          <li><a href="javascript:void(0)" onclick="openCheckoutModal()">Kenyan Delivery Rates</a></li>
+          <li><a href="/admin.html">Staff & Admin Access</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Visit Our Boutique</h4>
+        <p style="font-size: 0.85rem; color: #D1D5DB; margin-bottom: 8px;" id="footer-address">
+          Creston Executive Arcade, Kimathi Street, Nairobi CBD
+        </p>
+        <p style="font-size: 0.85rem; color: #D1D5DB;" id="footer-phone">
+          +254 712 345 678
+        </p>
+        <div style="margin-top: 14px;">
+          <span style="font-size: 0.8rem; color: var(--mpesa); font-weight: 600;">Lipa na M-Pesa Verified Merchant</span>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div>&copy; 2026 <span class="store-name-text">CRESTON PREMIUM COLLECTIONS</span>. All rights reserved.</div>
+      <div>Motto: <span class="store-motto-text">Quality, Style, Trust</span></div>
+    </div>
+  </footer>
+
+  <script src="/js/app.js"></script>
+</body>
+</html>

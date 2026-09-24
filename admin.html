@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | CRESTON PREMIUM COLLECTIONS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+  <style>
+    /* Admin Specific Styling */
+    .admin-layout {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .admin-header {
+      background: #111827;
+      color: white;
+      padding: 14px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid var(--gold);
+    }
+    .admin-nav {
+      background: #1F2937;
+      display: flex;
+      gap: 4px;
+      padding: 0 24px;
+      overflow-x: auto;
+    }
+    .admin-nav-item {
+      color: #9CA3AF;
+      padding: 14px 18px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .admin-nav-item:hover {
+      color: #FFFFFF;
+      background: rgba(255,255,255,0.03);
+    }
+    .admin-nav-item.active {
+      color: var(--gold);
+      border-bottom-color: var(--gold);
+      background: rgba(255,255,255,0.05);
+    }
+    .admin-main {
+      max-width: 1320px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 24px;
+      flex: 1;
+    }
+    .admin-tab-pane {
+      display: none;
+    }
+    .admin-tab-pane.active {
+      display: block;
+    }
+    /* KPI Cards */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .kpi-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .kpi-title {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+    }
+    .kpi-value {
+      font-size: 1.7rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+    .kpi-subtitle {
+      font-size: 0.75rem;
+      color: var(--mpesa);
+      font-weight: 600;
+    }
+    /* Tables */
+    .data-table-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 24px;
+    }
+    .card-header-bar {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #FAFAFA;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+    .data-table th {
+      background: #F3F4F6;
+      text-align: left;
+      padding: 12px 16px;
+      font-weight: 700;
+      color: var(--text-main);
+      border-bottom: 1px solid var(--border);
+    }
+    .data-table td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+    .data-table tr:hover {
+      background: #F9FAFB;
+    }
+    /* Settings Grid */
+    .settings-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    @media (max-width: 800px) {
+      .settings-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body class="admin-layout">
+
+  <!-- Admin Top Bar -->
+  <header class="admin-header">
+    <div style="display: flex; align-items: center; gap: 14px;">
+      <span style="font-family: var(--font-serif); font-size: 1.25rem; font-weight: 800; letter-spacing: 0.05em; color: var(--gold);">
+        CRESTON ADMIN
+      </span>
+      <span style="font-size: 0.8rem; background: rgba(255,255,255,0.1); padding: 3px 8px; border-radius: var(--radius-sm);">
+        Management Suite
+      </span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 16px;">
+      <a href="/" target="_blank" class="nav-link-btn" style="color: #D1D5DB; background: rgba(255,255,255,0.08);">
+        <span>👁️</span> View Customer Shop
+      </a>
+      <span style="font-size: 0.85rem; color: #E5E7EB;">
+        👤 <strong id="admin-profile-name">Administrator</strong>
+      </span>
+      <button class="nav-link-btn" style="color: var(--danger); background: rgba(220,38,38,0.1);" onclick="handleAdminLogout()">
+        Sign Out
+      </button>
+    </div>
+  </header>
+
+  <!-- Admin Navigation Tabs -->
+  <nav class="admin-nav">
+    <div class="admin-nav-item active" data-tab="report">
+      <span>📊</span> Daily Sales Report
+    </div>
+    <div class="admin-nav-item" data-tab="products">
+      <span>👔</span> Clothing & Stock Prices
+    </div>
+    <div class="admin-nav-item" data-tab="payment">
+      <span>💳</span> Payment & Till Settings
+    </div>
+    <div class="admin-nav-item" data-tab="branding">
+      <span>🎨</span> Logo & About Details
+    </div>
+    <div class="admin-nav-item" data-tab="orders">
+      <span>📦</span> Orders Management
+    </div>
+  </nav>
+
+  <!-- Admin Main Container -->
+  <main class="admin-main">
+    
+    <!-- =========================================================
+         TAB 1: DAILY SALES REPORT
+         ========================================================= -->
+    <div class="admin-tab-pane active" id="tab-report">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+        <div>
+          <h2 style="font-family: var(--font-serif); font-size: 1.5rem; font-weight: 800;">Daily Sales & Revenue Report</h2>
+          <p style="font-size: 0.85rem; color: var(--text-muted);">Real-time financial performance and product sales across Kenya.</p>
+        </div>
+        <div style="display: flex; gap: 10px; align-items: center;">
+          <label for="report-date-picker" style="font-size: 0.85rem; font-weight: 600;">Select Date:</label>
+          <input type="date" id="report-date-picker" class="form-input" style="width: auto; padding: 6px 12px;">
+          <button class="btn-checkout" style="width: auto; margin-top: 0; padding: 8px 16px; font-size: 0.85rem; background: var(--mpesa);" onclick="exportDailyReportCSV()">
+            📥 Download CSV
+          </button>
+          <button class="btn-checkout" style="width: auto; margin-top: 0; padding: 8px 16px; font-size: 0.85rem; background: var(--primary);" onclick="window.print()">
+            🖨️ Print Report
+          </button>
+        </div>
+      </div>
+
+      <!-- KPI Overview Cards -->
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <span class="kpi-title">Gross Revenue (Today)</span>
+          <span class="kpi-value" id="kpi-gross-sales" style="color: var(--mpesa);">KSh 0</span>
+          <span class="kpi-subtitle">Total paid sales</span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-title">Orders Processed</span>
+          <span class="kpi-value" id="kpi-total-orders">0</span>
+          <span class="kpi-subtitle">Successful transactions</span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-title">Garments / Items Sold</span>
+          <span class="kpi-value" id="kpi-units-sold">0</span>
+          <span class="kpi-subtitle">Suits, dresses & wear</span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-title">Average Order Value (AOV)</span>
+          <span class="kpi-value" id="kpi-aov">KSh 0</span>
+          <span class="kpi-subtitle">Per customer order</span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-title">County Delivery Fees</span>
+          <span class="kpi-value" id="kpi-delivery-fees">KSh 0</span>
+          <span class="kpi-subtitle">Courier collected</span>
+        </div>
+      </div>
+
+      <!-- Detailed Breakdown Grid -->
+      <div class="settings-grid">
+        <!-- Product Sales Breakdown Table -->
+        <div class="data-table-card" style="grid-column: 1 / -1;">
+          <div class="card-header-bar">
+            <h3 style="font-size: 1.05rem; font-weight: 700;">Garment Sales Breakdown for Selected Date</h3>
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Clothing Product</th>
+                <th>Category</th>
+                <th>Units Sold</th>
+                <th>Revenue Generated</th>
+                <th>Remaining Inventory</th>
+              </tr>
+            </thead>
+            <tbody id="report-product-breakdown-tbody">
+              <!-- Rendered by JS -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Payment Methods Breakdown -->
+        <div class="data-table-card">
+          <div class="card-header-bar">
+            <h3 style="font-size: 1.05rem; font-weight: 700;">Payment Channels Breakdown</h3>
+          </div>
+          <div style="padding: 16px;" id="report-payment-breakdown">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <!-- County Delivery Breakdown -->
+        <div class="data-table-card">
+          <div class="card-header-bar">
+            <h3 style="font-size: 1.05rem; font-weight: 700;">Regional County Delivery Distribution</h3>
+          </div>
+          <div style="padding: 16px;" id="report-county-breakdown">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- =========================================================
+         TAB 2: CLOTHING & STOCK PRICES
+         ========================================================= -->
+    <div class="admin-tab-pane" id="tab-products">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+        <div>
+          <h2 style="font-family: var(--font-serif); font-size: 1.5rem; font-weight: 800;">Clothing Catalog & Inventory Management</h2>
+          <p style="font-size: 0.85rem; color: var(--text-muted);">
+            Update selling prices (KSh), modify stock quantities, void defective/discontinued items, or add new clothing pieces.
+          </p>
+        </div>
+        <button class="btn-checkout" style="width: auto; margin-top: 0; padding: 10px 18px; font-size: 0.88rem; background: var(--primary);" onclick="document.getElementById('admin-add-product-modal').classList.add('active')">
+          ➕ Upload New Clothing Item
+        </button>
+      </div>
+
+      <div class="data-table-card">
+        <div class="card-header-bar">
+          <h3 style="font-size: 1.05rem; font-weight: 700;">All Garments & Pricing</h3>
+          <span style="font-size: 0.8rem; color: var(--text-muted);">Click "Save" on any row to instantly update price or stock</span>
+        </div>
+        <div style="overflow-x: auto;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Image</th>
+                <th>Item & Details</th>
+                <th>Category</th>
+                <th>Price (KSh)</th>
+                <th>Current Stock <span style="font-size:0.75rem; color:var(--gold); font-weight:normal;">(Click to Edit)</span></th>
+                <th>Price Save</th>
+                <th>Actions & Status</th>
+              </tr>
+            </thead>
+            <tbody id="admin-products-table-tbody">
+              <!-- Rendered by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- =========================================================
+         TAB 3: PAYMENT & TILL SETTINGS (M-PESA)
+         ========================================================= -->
+    <div class="admin-tab-pane" id="tab-payment">
+      <div style="margin-bottom: 20px;">
+        <h2 style="font-family: var(--font-serif); font-size: 1.5rem; font-weight: 800;">M-Pesa Payment & Till Settings</h2>
+        <p style="font-size: 0.85rem; color: var(--text-muted);">
+          Change your Buy Goods Till Number, Paybill details, and customer checkout payment instructions.
+        </p>
+      </div>
+
+      <form id="payment-settings-form" onsubmit="handleSavePaymentSettings(event)">
+        <div class="settings-grid">
+          <div class="data-table-card" style="padding: 24px;">
+            <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 16px; color: var(--mpesa); display: flex; align-items: center; gap: 8px;">
+              <span>🏪</span> Buy Goods and Services (Till)
+            </h3>
+            <div class="form-group">
+              <label class="form-label" for="setting-till-number">M-Pesa Till Number *</label>
+              <input type="text" id="setting-till-number" class="form-input" style="font-size: 1.1rem; font-weight: 800; letter-spacing: 0.05em;" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="setting-till-name">Till Merchant Name *</label>
+              <input type="text" id="setting-till-name" class="form-input" required>
+            </div>
+            <div class="form-group" style="margin-top: 18px;">
+              <label style="display: flex; align-items: center; gap: 8px; font-weight: 600; cursor: pointer;">
+                <input type="checkbox" id="setting-till-toggle" style="width: 18px; height: 18px;">
+                Enable M-Pesa Buy Goods Till at Checkout
+              </label>
+            </div>
+            <div class="form-group">
+              <label style="display: flex; align-items: center; gap: 8px; font-weight: 600; cursor: pointer;">
+                <input type="checkbox" id="setting-stk-toggle" style="width: 18px; height: 18px;">
+                Enable M-Pesa STK Push Prompt
+              </label>
+            </div>
+          </div>
+
+          <div class="data-table-card" style="padding: 24px;">
+            <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 16px; color: var(--gold); display: flex; align-items: center; gap: 8px;">
+              <span>🏦</span> M-Pesa Paybill & Cash on Delivery
+            </h3>
+            <div class="form-group">
+              <label class="form-label" for="setting-paybill-number">M-Pesa Paybill Business No.</label>
+              <input type="text" id="setting-paybill-number" class="form-input">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="setting-paybill-account">Paybill Account Reference</label>
+              <input type="text" id="setting-paybill-account" class="form-input">
+            </div>
+            <div class="form-group" style="margin-top: 18px;">
+              <label style="display: flex; align-items: center; gap: 8px; font-weight: 600; cursor: pointer;">
+                <input type="checkbox" id="setting-paybill-toggle" style="width: 18px; height: 18px;">
+                Enable M-Pesa Paybill at Checkout
+              </label>
+            </div>
+            <div class="form-group">
+              <label style="display: flex; align-items: center; gap: 8px; font-weight: 600; cursor: pointer;">
+                <input type="checkbox" id="setting-cod-toggle" style="width: 18px; height: 18px;">
+                Enable Cash on Delivery (COD)
+              </label>
+            </div>
+          </div>
+
+          <div class="data-table-card" style="grid-column: 1 / -1; padding: 24px;">
+            <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 14px;">
+              Customer Checkout Payment Instructions
+            </h3>
+            <div class="form-group">
+              <label class="form-label" for="setting-instructions">Step-by-step instructions shown to customers:</label>
+              <textarea id="setting-instructions" rows="4" class="form-textarea" style="font-family: monospace;"></textarea>
+            </div>
+            <button type="submit" class="btn-checkout" style="width: auto; padding: 12px 28px; background: var(--mpesa);">
+              Save M-Pesa Payment Settings
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- =========================================================
+         TAB 4: LOGO & ABOUT DETAILS
+         ========================================================= -->
+    <div class="admin-tab-pane" id="tab-branding">
+      <div style="margin-bottom: 20px;">
+        <h2 style="font-family: var(--font-serif); font-size: 1.5rem; font-weight: 800;">Store Branding, Logo & About Details</h2>
+        <p style="font-size: 0.85rem; color: var(--text-muted);">
+          Change your company logo, motto ("Quality, Style, Trust"), and physical boutique details in Nairobi.
+        </p>
+      </div>
+
+      <form id="store-branding-form" onsubmit="handleSaveStoreSettings(event)">
+        <div class="settings-grid">
+          <!-- Logo & Brand Info -->
+          <div class="data-table-card" style="padding: 24px;">
+            <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 16px; color: var(--gold);">
+              Store Logo & Brand Identity
+            </h3>
+
+            <!-- Logo Preview -->
+            <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 16px; padding: 12px; background: #F9FAFB; border-radius: var(--radius-sm); border: 1px solid var(--border);">
+              <img id="admin-logo-preview" src="" alt="Logo Preview" style="width: 70px; height: 70px; object-fit: cover; border-radius: var(--radius-sm); border: 1px solid var(--border-gold);">
+              <div>
+                <span style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--gold);">Live Logo Preview</span>
+                <p style="font-size: 0.8rem; color: var(--text-muted);">Changes will update immediately on the customer storefront.</p>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="setting-logo-url">Logo Image URL</label>
+              <input type="url" id="setting-logo-url" class="form-input" placeholder="https://example.com/logo.jpg">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="setting-logo-file">Or Upload Image File from Device</label>
+              <input type="file" id="setting-logo-file" accept="image/*" class="form-input">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="setting-store-name">Store Name</label>
+              <input type="text" id="setting-store-name" class="form-input" value="CRESTON PREMIUM COLLECTIONS" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="setting-store-motto">Brand Motto</label>
+              <input type="text" id="setting-store-motto" class="form-input" value="Quality, Style, Trust" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="setting-banner-text">Top Announcement Banner Text</label>
+              <input type="text" id="setting-banner-text" class="form-input">
+            </div>
+          </div>
+
+          <!-- About Us Details & Contacts -->
+          <div class="data-table-card" style="padding: 24px;">
+            <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 16px; color: var(--primary);">
+              About Us Story & Boutique Location
+            </h3>
+
+            <div class="form-group">
+              <label class="form-label" for="setting-about-title">About Us Headline</label>
+              <input type="text" id="setting-about-title" class="form-input" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="setting-about-text">About Us Story / Heritage Description</label>
+              <textarea id="setting-about-text" rows="5" class="form-textarea" required></textarea>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="setting-physical-address">Physical Boutique Location in Kenya</label>
+              <input type="text" id="setting-physical-address" class="form-input" required>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="setting-phone">Phone Numbers</label>
+                <input type="text" id="setting-phone" class="form-input" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="setting-email">Contact Email</label>
+                <input type="email" id="setting-email" class="form-input" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="setting-opening-hours">Boutique Operating Hours</label>
+              <input type="text" id="setting-opening-hours" class="form-input" required>
+            </div>
+          </div>
+
+          <div style="grid-column: 1 / -1;">
+            <button type="submit" class="btn-checkout" style="width: auto; padding: 12px 28px; background: var(--primary);">
+              Save Brand Identity & About Details
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- =========================================================
+         TAB 5: ORDERS MANAGEMENT
+         ========================================================= -->
+    <div class="admin-tab-pane" id="tab-orders">
+      <div style="margin-bottom: 20px;">
+        <h2 style="font-family: var(--font-serif); font-size: 1.5rem; font-weight: 800;">Customer Orders & Dispatch</h2>
+        <p style="font-size: 0.85rem; color: var(--text-muted);">
+          Track, dispatch, update statuses, or void orders with automatic inventory restocking.
+        </p>
+      </div>
+
+      <div class="data-table-card">
+        <div class="card-header-bar">
+          <h3 style="font-size: 1.05rem; font-weight: 700;">Customer Orders</h3>
+        </div>
+        <div style="overflow-x: auto;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Order No & Date</th>
+                <th>Customer & Phone</th>
+                <th>County & Address</th>
+                <th>Total & Payment</th>
+                <th>Order Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="admin-orders-table-tbody">
+              <!-- Rendered by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- MODAL: ADD NEW CLOTHING ITEM -->
+  <div class="modal-backdrop" id="admin-add-product-modal">
+    <div class="modal-box" style="max-width: 650px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Upload New Clothing Item</h3>
+        <button class="modal-close" onclick="closeAdminModals()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="add-product-form" onsubmit="handleCreateProduct(event)">
+          <div class="form-group">
+            <label class="form-label" for="product-name-input">Garment Name *</label>
+            <input type="text" id="product-name-input" class="form-input" placeholder="e.g. Creston Executive Merino Wool Blazer" required>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="product-category-input">Clothing Category *</label>
+              <select id="product-category-input" class="form-select" required>
+                <!-- Populated dynamically -->
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="product-stock-input">Stock Quantity *</label>
+              <input type="number" id="product-stock-input" class="form-input" min="0" value="10" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="product-price-input">Selling Price (KSh) *</label>
+              <input type="number" id="product-price-input" class="form-input" min="0" step="50" placeholder="e.g. 8500" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="product-orig-price-input">Original Price (KSh, optional)</label>
+              <input type="number" id="product-orig-price-input" class="form-input" min="0" step="50" placeholder="e.g. 10000">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="product-cost-input">Cost Price (KSh, for profit reporting)</label>
+            <input type="number" id="product-cost-input" class="form-input" min="0" step="50" placeholder="e.g. 4500">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="product-sizes-input">Available Sizes</label>
+              <input type="text" id="product-sizes-input" class="form-input" value="S, M, L, XL, XXL">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="product-colors-input">Available Colors</label>
+              <input type="text" id="product-colors-input" class="form-input" value="Navy, Charcoal, Black">
+            </div>
+          </div>
+
+          <div class="form-group" style="background: #F9FAFB; border: 1px solid var(--border-gold); padding: 12px; border-radius: var(--radius-sm);">
+            <label class="form-label" for="product-file-input">
+              📁 Choose Clothing Image from PC / Laptop *
+            </label>
+            <input type="file" id="product-file-input" accept="image/*" class="form-input" style="padding: 6px;">
+            <div id="product-upload-preview" style="display: none; margin-top: 8px; align-items: center; gap: 10px;">
+              <img id="product-preview-img" src="" alt="Selected Preview" style="width: 70px; height: 80px; object-fit: cover; border-radius: 4px; border: 1px solid var(--border);">
+              <span style="font-size: 0.8rem; color: var(--mpesa); font-weight: 600;">✓ Local image selected from PC</span>
+            </div>
+            <div style="margin-top: 8px;">
+              <label class="form-label" for="product-image-input" style="font-size: 0.78rem; color: var(--text-muted);">
+                Or enter Web Image URL:
+              </label>
+              <input type="url" id="product-image-input" class="form-input" placeholder="https://images.unsplash.com/..." style="font-size: 0.85rem;">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="product-desc-input">Garment Description & Fabric Details *</label>
+            <textarea id="product-desc-input" rows="3" class="form-textarea" placeholder="Describe fabric weave, fit, cut, and occasion..." required></textarea>
+          </div>
+
+          <button type="submit" class="btn-checkout" style="background: var(--primary);">
+            Publish Clothing Item to Store
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: EDIT CLOTHING ITEM -->
+  <div class="modal-backdrop" id="admin-edit-product-modal">
+    <div class="modal-box" style="max-width: 650px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Edit Clothing Item</h3>
+        <button class="modal-close" onclick="closeAdminModals()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="edit-product-form" onsubmit="handleUpdateProduct(event)">
+          <input type="hidden" id="edit-product-id">
+
+          <div class="form-group">
+            <label class="form-label" for="edit-product-name-input">Garment Name *</label>
+            <input type="text" id="edit-product-name-input" class="form-input" required>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="edit-product-category-input">Clothing Category *</label>
+              <select id="edit-product-category-input" class="form-select" required>
+                <!-- Populated dynamically -->
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="edit-product-stock-input">Stock Quantity *</label>
+              <input type="number" id="edit-product-stock-input" class="form-input" min="0" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="edit-product-price-input">Selling Price (KSh) *</label>
+              <input type="number" id="edit-product-price-input" class="form-input" min="0" step="50" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="edit-product-orig-price-input">Original Price (KSh)</label>
+              <input type="number" id="edit-product-orig-price-input" class="form-input" min="0" step="50">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="edit-product-cost-input">Cost Price (KSh)</label>
+            <input type="number" id="edit-product-cost-input" class="form-input" min="0" step="50">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="edit-product-sizes-input">Available Sizes</label>
+              <input type="text" id="edit-product-sizes-input" class="form-input">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="edit-product-colors-input">Available Colors</label>
+              <input type="text" id="edit-product-colors-input" class="form-input">
+            </div>
+          </div>
+
+          <div class="form-group" style="background: #F9FAFB; border: 1px solid var(--border-gold); padding: 12px; border-radius: var(--radius-sm);">
+            <label class="form-label" for="edit-product-file-input">
+              📁 Choose New Image from PC / Laptop
+            </label>
+            <input type="file" id="edit-product-file-input" accept="image/*" class="form-input" style="padding: 6px;">
+            <div id="edit-product-upload-preview" style="display: flex; margin-top: 8px; align-items: center; gap: 10px;">
+              <img id="edit-product-preview-img" src="" alt="Current Preview" style="width: 70px; height: 80px; object-fit: cover; border-radius: 4px; border: 1px solid var(--border);">
+              <span id="edit-product-preview-label" style="font-size: 0.8rem; color: var(--text-muted);">Current Garment Image</span>
+            </div>
+            <div style="margin-top: 8px;">
+              <label class="form-label" for="edit-product-image-input" style="font-size: 0.78rem; color: var(--text-muted);">
+                Or Edit Image URL:
+              </label>
+              <input type="url" id="edit-product-image-input" class="form-input" style="font-size: 0.85rem;">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="edit-product-desc-input">Description & Fabric Details *</label>
+            <textarea id="edit-product-desc-input" rows="3" class="form-textarea" required></textarea>
+          </div>
+
+          <div style="display: flex; gap: 10px; margin-top: 14px;">
+            <button type="button" class="btn-checkout" style="background: #E5E7EB; color: #374151; margin-top: 0;" onclick="closeAdminModals()">Cancel</button>
+            <button type="submit" class="btn-checkout" style="background: var(--gold); color: var(--primary); margin-top: 0;">
+              Save Garment Changes
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: DELETE / REMOVE PRODUCT CONFIRMATION -->
+  <div class="modal-backdrop" id="admin-delete-product-modal">
+    <div class="modal-box" style="max-width: 460px;">
+      <div class="modal-header">
+        <h3 class="modal-title" style="color: var(--danger);">Remove Item Completely</h3>
+        <button class="modal-close" onclick="closeAdminModals()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div style="text-align: center; margin-bottom: 16px;">
+          <div style="font-size: 2.5rem; margin-bottom: 8px;">🗑️</div>
+          <h4 id="delete-product-name-display" style="font-size: 1.15rem; font-weight: 700; color: var(--primary);"></h4>
+          <p style="font-size: 0.88rem; color: #4B5563; margin-top: 8px; line-height: 1.5;">
+            Are you sure you want to <strong>remove this item completely from the website</strong>? This will permanently delete the garment from the database and remove it from all catalogs.
+          </p>
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <button type="button" class="btn-checkout" style="background: #E5E7EB; color: #374151; margin-top: 0;" onclick="closeAdminModals()">Cancel</button>
+          <button type="button" class="btn-checkout" style="background: var(--danger); margin-top: 0;" onclick="confirmDeleteProduct()">
+            Yes, Remove from Website Completely
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: VOID PRODUCT CONFIRMATION -->
+  <div class="modal-backdrop" id="admin-void-modal">
+    <div class="modal-box" style="max-width: 480px;">
+      <div class="modal-header">
+        <h3 class="modal-title" style="color: #D97706;">Void / Discontinue Item</h3>
+        <button class="modal-close" onclick="closeAdminModals()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 0.9rem; color: #4B5563; margin-bottom: 14px; line-height: 1.5;">
+          Voiding hides this garment from customer search, categories, and shopping catalog. You can also choose to remove it completely from the website right away.
+        </p>
+        <div class="form-group">
+          <label class="form-label" for="void-reason-input">Reason for Voiding:</label>
+          <input type="text" id="void-reason-input" class="form-input" placeholder="e.g. Discontinued seasonal fabric, defective batch" required>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 18px;">
+          <div style="display: flex; gap: 10px;">
+            <button class="btn-checkout" style="background: #E5E7EB; color: #374151; margin-top: 0; flex: 1;" onclick="closeAdminModals()">Cancel</button>
+            <button class="btn-checkout" style="background: #D97706; margin-top: 0; flex: 1;" onclick="confirmVoidProduct()">🚫 Void (Hide Item)</button>
+          </div>
+          <button class="btn-checkout" style="background: var(--danger); margin-top: 0; font-size: 0.85rem;" onclick="convertVoidToDelete()">
+            🗑️ Or Remove from Website Completely Now
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: ADMIN LOGIN OVERLAY -->
+  <div class="modal-backdrop" id="admin-login-overlay" style="display: flex; background: rgba(17, 24, 39, 0.95);">
+    <div class="modal-box" style="max-width: 420px; border-top: 4px solid var(--gold);">
+      <div style="text-align: center; padding: 24px 24px 0 24px;">
+        <span style="font-family: var(--font-serif); font-size: 1.4rem; font-weight: 800; color: var(--gold);">
+          CRESTON ADMIN
+        </span>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">
+          Enter administrator credentials to manage inventory & sales.
+        </p>
+      </div>
+      <div class="modal-body">
+        <form onsubmit="handleAdminLogin(event)">
+          <div class="form-group">
+            <label class="form-label">Admin Email or Phone</label>
+            <input type="text" id="admin-login-identifier" class="form-input" value="admin@creston.co.ke" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Admin Password</label>
+            <input type="password" id="admin-login-password" class="form-input" value="Admin@123" required>
+          </div>
+          <button type="submit" class="btn-checkout" style="background: var(--primary);">
+            Authenticate to Admin Portal
+          </button>
+          <div style="text-align: center; margin-top: 14px; font-size: 0.78rem; color: #9CA3AF;">
+            Default Admin: <code>admin@creston.co.ke</code> / <code>Admin@123</code>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container" id="admin-toast-container"></div>
+
+  <script src="/js/admin.js"></script>
+</body>
+</html>

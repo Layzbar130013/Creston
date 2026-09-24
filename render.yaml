@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: creston-premium-collections
+    runtime: python
+    region: frankfurt
+    plan: starter
+    buildCommand: "echo 'Zero external dependencies: ready for immediate execution'"
+    startCommand: "python3 server/app.py"
+    envVars:
+      - key: PORT
+        sync: false
+      - key: HOST
+        value: 0.0.0.0
+      - key: CRESTON_DB_PATH
+        value: /var/data/creston.db
+      - key: CRESTON_UPLOAD_DIR
+        value: /var/data/uploads
+    disk:
+      name: creston-storage
+      mountPath: /var/data
+      sizeGB: 1
+    healthCheckPath: /api/store/settings
+    autoDeploy: true
